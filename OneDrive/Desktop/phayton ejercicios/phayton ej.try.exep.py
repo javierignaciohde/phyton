@@ -1,31 +1,34 @@
-# Tupla: asientos disponibles (no se pueden modificar)
-asientos_disponibles = ("A1", "A2", "A3", "B1", "B2")
-
-reservas = {}  # diccionario: asiento -> pasajero
-
-def reservar(asiento, pasajero):
+def estadisticas(datos):
     try:
-        if asiento not in asientos_disponibles:
-            raise ValueError(f"El asiento '{asiento}' no existe en este vuelo.")
-        if asiento in reservas:
-            raise ValueError(f"El asiento '{asiento}' ya está ocupado por {reservas[asiento]}.")
+        if not isinstance(datos, list):
+            raise TypeError("Se esperaba una lista.")
+        if len(datos) == 0:
+            raise ValueError("La lista no puede estar vacía.")
 
-        reservas[asiento] = pasajero
-        print(f"Reserva confirmada: {pasajero} -> asiento {asiento}")
+        numeros = [float(x) for x in datos]
+
+        total    = sum(numeros)
+        promedio = total / len(numeros)
+        maximo   = max(numeros)
+        minimo   = min(numeros)
+        rango    = maximo - minimo
+
+        print(f"Total:    {total}")
+        print(f"Promedio: {promedio:.2f}")
+        print(f"Máximo:   {maximo}")
+        print(f"Mínimo:   {minimo}")
+        print(f"Rango:    {rango}")
 
     except ValueError as e:
-        print(f"No se pudo reservar: {e}")
+        print(f"Error de valor: {e}")
+    except TypeError as e:
+        print(f"Error de tipo: {e}")
 
-def cancelar(asiento):
-    try:
-        pasajero = reservas.pop(asiento)
-        print(f"Reserva cancelada: {pasajero} liberó el asiento {asiento}")
-    except KeyError:
-        print(f"Error: el asiento '{asiento}' no tiene ninguna reserva.")
+print("=== Caso válido ===")
+estadisticas([4, 7, 2, 9, 1, 5])
 
-reservar("A1", "Javier")
-reservar("A2", "Ana")
-reservar("A1", "Luis")    # ya ocupado
-reservar("C9", "Carlos")  # no existe
-cancelar("A2")
-cancelar("A2")            # ya fue cancelado
+print("\n=== Lista con texto ===")
+estadisticas([4, 7, "hola", 9])
+
+print("\n=== Lista vacía ===")
+estadisticas([])
